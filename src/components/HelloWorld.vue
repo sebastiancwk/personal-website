@@ -9,6 +9,7 @@ const count = ref(0)
 </script>
 
 <template>
+<div>
   <p>Hello 👋</p>
   <p>I'm Seb</p>
   <p>
@@ -17,4 +18,5 @@ const count = ref(0)
     <p>
     <a href="https://github.com/sebastiancwk" target="_blank>GitHub</a>
   </p>
+</div>
 </template>

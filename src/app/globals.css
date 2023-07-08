@@ -16,5 +16,18 @@
   }
 }
 
+@layer base {
+  * {
+    @apply font-serif;
+  }
+
+  a {
+    @apply underline;
+    &:hover {
+      @apply font-bold;
+    }
+  }
+}
+
 body {
 }

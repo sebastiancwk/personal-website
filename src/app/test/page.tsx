@@ -1,14 +1,15 @@
 "use client";
-import { useEffect, useRef } from "react";
-import { Engine, Render, Bodies, World, Svg, Composite, Body, Vertices } from "matter-js";
+import { MutableRefObject, PropsWithChildren, useEffect, useRef } from "react";
+import { Engine, Render, Bodies, World } from "matter-js";
+import React from "react";
 
 const useTest = () => {
   const scene = useRef();
-  const engine = useRef(Engine.create());
+  const engine = useRef(Engine.create({ gravity: { y: 0.8 } }));
 
   useEffect(() => {
-    const cw = document.body.clientWidth;
-    const ch = document.body.clientHeight;
+    const cw = window.innerWidth;
+    const ch = window.innerHeight;
 
     const render = Render.create({
       element: scene.current,
@@ -18,19 +19,33 @@ const useTest = () => {
         height: ch,
         wireframes: false,
         background: "transparent",
-        showPositions: false
+        showPositions: false,
       },
     });
 
     World.add(engine.current.world, [
-      Bodies.rectangle(cw / 2, -10, cw, 20, { isStatic: true }),
-      Bodies.rectangle(-10, ch / 2, 20, ch, { isStatic: true }),
-      Bodies.rectangle(cw / 2, ch + 10, cw, 20, { isStatic: true }),
-      Bodies.rectangle(cw + 10, ch / 2, 20, ch, { isStatic: true }),
+      // Bodies.rectangle(cw / 2, -10, cw, 20, {
+      //   isStatic: true,
+      //   render: { fillStyle: "transparent", strokeStyle: "transparent" },
+      // }),
+      Bodies.rectangle(-10, ch / 2, 20, ch, {
+        isStatic: true,
+        render: { fillStyle: "transparent", strokeStyle: "transparent" },
+      }),
+      Bodies.rectangle(cw / 2, ch, cw, 20, {
+        isStatic: true,
+        render: { fillStyle: "transparent", strokeStyle: "transparent" },
+      }),
+      Bodies.rectangle(cw + 10, ch / 2, 20, ch, {
+        isStatic: true,
+        render: { fillStyle: "transparent", strokeStyle: "transparent" },
+      }),
     ]);
 
-    Engine.run(engine.current);
-    Render.run(render);
+    setTimeout(() => {
+      Engine.run(engine.current);
+      Render.run(render);
+    }, 0);
 
     return () => {
       Render.stop(render);
@@ -44,59 +59,107 @@ const useTest = () => {
   return { engine, scene };
 };
 
-const useCircle = () => {
+const getStyle = (container: any) => {
+  // for getting computed styles
+  const widthInPx = getComputedStyle(container.current).getPropertyValue(
+    "width"
+  );
+  const heightInPx = getComputedStyle(container.current).getPropertyValue(
+    "height"
+  );
 
-}
+  const width = Number(widthInPx.replace("px", ""));
+  const height = Number(heightInPx.replace("px", ""));
 
+  return { width, height };
+};
 
-
-function Comp(props) {
-  const isPressed = useRef(false);
-
-  const { engine, scene } = useTest();
+const GravityDiv = ({
+  engine,
+  children,
+}: PropsWithChildren<{ engine: MutableRefObject<Engine> }>) => {
+  const divRef = useRef();
 
   useEffect(() => {
-    const rectangle = Bodies.rectangle(engine.current.render?.options.width ?? 10 /2, engine.current.render?.options.height ?? 10 / 2, 20, 20, { isStatic: true })
+    const cw = document.body.clientWidth;
+    const ch = document.body.clientHeight;
 
-    World.add(engine.current.world, [rectangle])
-  }, [engine])
+    const { width, height } = getStyle(divRef);
+    const boxBody = Bodies.rectangle(width / 2, -ch, width, height, {
+      render: { fillStyle: "red", strokeStyle: "transparent" },
+    });
+    const box = {
+      body: boxBody,
+      elem: divRef,
+      render() {
+        const { x, y } = boxBody.position;
+        if (!divRef) return;
+        divRef.current.style.top = `${y - height / 2}px`;
+        divRef.current.style.left = `${x - width / 2}px`;
+        divRef.current.style.transform = `rotate(${boxBody.angle}rad)`;
+      },
+    };
 
-  const handleDown = () => {
-    isPressed.current = true;
-  };
+    World.add(engine.current.world, [box.body]);
 
-  const handleUp = () => {
-    isPressed.current = false;
-  };
+    (function rerender() {
+      box.render();
+      requestAnimationFrame(rerender);
+    })();
+  });
 
-  const handleAddCircle = (e) => {
-    if (isPressed.current) {
-      const ball = Bodies.circle(
-        e.clientX,
-        e.clientY,
-        10 + Math.random() * 30,
-        {
-          mass: 10,
-          restitution: 0.9,
-          friction: 0.005,
-          render: {
-            fillStyle: "#0000ff",
-          },
-        }
-      );
-      World.add(engine.current.world, [ball]);
-    }
-  };
+  return (
+    <div className="relative">
+      {/* <div className="p-1 bg-white whitespace-nowrap">{children}</div> */}
+      <div ref={divRef} className="absolute p-1 bg-white whitespace-nowrap">
+        {children}
+      </div>
+    </div>
+  );
+};
+
+function Comp() {
+  const { engine, scene } = useTest();
 
   return (
     <div
-      onMouseDown={handleDown}
-      onMouseUp={handleUp}
-      onMouseMove={handleAddCircle}
-      style={{ width: "100vw", height: "100vh" }}
+      style={{
+        width: "100vw",
+        height: "100vh",
+        maxHeight: "100vh",
+        backgroundColor: "#002fa7",
+      }}
     >
-      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="sleigh" class="svg-inline--fa fa-sleigh fa-w-20" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path fill="currentColor" d="M612.7 350.7l-9.3-7.4c-6.9-5.5-17-4.4-22.5 2.5l-10 12.5c-5.5 6.9-4.4 17 2.5 22.5l9.3 7.4c5.9 4.7 9.2 11.7 9.2 19.2 0 13.6-11 24.6-24.6 24.6H48c-8.8 0-16 7.2-16 16v16c0 8.8 7.2 16 16 16h516c39 0 73.7-29.3 75.9-68.3 1.4-23.8-8.7-46.3-27.2-61zM32 224c0 59.6 40.9 109.2 96 123.5V400h64v-48h192v48h64v-48c53 0 96-43 96-96v-96c17.7 0 32-14.3 32-32s-14.3-32-32-32h-96v64c0 35.3-28.7 64-64 64h-20.7c-65.8 0-125.9-37.2-155.3-96-29.4-58.8-89.6-96-155.3-96H32C14.3 32 0 46.3 0 64s14.3 32 32 32v128z"></path></svg>
-      <div ref={scene} style={{ width: "100%", height: "100%" }} />
+      <div
+        ref={scene}
+        style={{ width: "100%", height: "100%" }}
+        className="absolute"
+      />
+      <div className="absolute top-0 px-5">
+        <GravityDiv engine={engine}>
+          <h1 className="font-semibold text-[3rem] leading-none pb-1">
+            Sebastian King
+          </h1>
+        </GravityDiv>
+        <GravityDiv engine={engine}>
+          <p>Software Engineer</p>
+        </GravityDiv>
+        <GravityDiv engine={engine}>
+          <p>Currently at GoodHuman</p>
+        </GravityDiv>
+        <GravityDiv engine={engine}>
+          <div className="flex justify-between gap-12">
+            <p className="text-md">
+              <a href="https://www.linkedin.com/in/sebastian-king-15011b171/">
+                LinkedIn
+              </a>
+            </p>
+            <p className="text-sm">
+              <a href="https://github.com/sebastiancwk">GitHub</a>
+            </p>
+          </div>
+        </GravityDiv>
+      </div>
     </div>
   );
 }

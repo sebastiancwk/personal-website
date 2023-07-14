@@ -47,26 +47,24 @@ export const GravityDiv = ({
         isStatic,
       }
     );
-    const box = {
-      body: boxBody,
-      elem: divRef,
-      render() {
-        const { x, y } = boxBody.position;
-        if (!divRef?.current) return;
-        divRef.current.style.top = `${y - height / 2}px`;
-        divRef.current.style.left = `${x - width / 2}px`;
-        divRef.current.style.transform = `rotate(${boxBody.angle}rad)`;
-      },
-    };
+    
+    const render = () =>  {
+      const { x, y } = boxBody.position;
+      if (!divRef?.current) return;
+      divRef.current.style.top = `${y - height / 2}px`;
+      divRef.current.style.left = `${x - width / 2}px`;
+      divRef.current.style.transform = `rotate(${boxBody.angle}rad)`;
+    }
 
-    box.render();
+    render();
+    
     setTimeout(() => {
       if (startingPointRef?.current)
         startingPointRef.current.className += " hidden";
 
-      World.add(engine.world, [box.body]);
+      World.add(engine.world, [boxBody]);
       (function rerender() {
-        box.render();
+        render();
         requestAnimationFrame(rerender);
       })();
     }, delay);

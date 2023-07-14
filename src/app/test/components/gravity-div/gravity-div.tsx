@@ -18,11 +18,13 @@ const getStyle = (container: any) => {
 
 type GravityDivProps = PropsWithChildren<{
   delay?: number;
+  isStatic?: boolean
 }>;
 
 export const GravityDiv = ({
   delay = 0,
   children,
+  isStatic,
 }: GravityDivProps) => {
   const divRef = useRef<HTMLDivElement>();
   const startingPointRef = useRef<HTMLDivElement>();
@@ -42,6 +44,7 @@ export const GravityDiv = ({
       height,
       {
         render: { fillStyle: "transparent", strokeStyle: "transparent" },
+        isStatic,
       }
     );
     const box = {
@@ -71,7 +74,7 @@ export const GravityDiv = ({
 
   return (
     <div className="">
-      <div ref={startingPointRef} className="ml-2 whitespace-nowrap">
+      <div ref={startingPointRef} className="whitespace-nowrap">
         {children}
       </div>
       <div

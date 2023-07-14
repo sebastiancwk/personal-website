@@ -20,15 +20,14 @@ export const GravityContainerProvider = ({
   container,
   children,
 }: PropsWithChildren<{ container: MutableRefObject<HTMLDivElement> }>) => {
-  const scene = container;
-  const engine = useRef(Engine.create({ gravity: { y: 0.8 } }));
+  const engine = useRef(Engine.create({ gravity: { y: 0.5 } }));
 
   useEffect(() => {
     const cw = window.innerWidth;
     const ch = window.innerHeight;
 
     const render = Render.create({
-      element: scene.current,
+      element: container.current,
       engine: engine.current,
       options: {
         width: cw,
@@ -44,7 +43,7 @@ export const GravityContainerProvider = ({
         isStatic: true,
         render: { fillStyle: "transparent", strokeStyle: "transparent" },
       }),
-      Bodies.rectangle(-10, ch / 2, 20, ch, {
+      Bodies.rectangle(-5, ch / 2, 20, ch, {
         isStatic: true,
         render: { fillStyle: "transparent", strokeStyle: "transparent" },
       }),
@@ -70,11 +69,11 @@ export const GravityContainerProvider = ({
       render.canvas.remove();
       render.textures = {};
     };
-  }, [scene]);
+  }, []);
 
   return (
     <GravityContainerContext.Provider
-      value={{ engine: engine.current, container: scene.current }}
+      value={{ engine: engine.current, container: container.current }}
     >
       {children}
     </GravityContainerContext.Provider>

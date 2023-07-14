@@ -1,7 +1,8 @@
 import { Bodies, Engine, Render, World } from "matter-js";
 import React, {
-  MutableRefObject,
+
   PropsWithChildren,
+  RefObject,
   useEffect,
   useRef,
 } from "react";
@@ -9,7 +10,7 @@ import { useContext } from "react";
 
 type GravityContainerContextProps = {
   engine: Engine;
-  container: HTMLDivElement;
+  container: RefObject<HTMLDivElement>;
 };
 const GravityContainerContext =
   React.createContext<GravityContainerContextProps>(
@@ -19,7 +20,7 @@ const GravityContainerContext =
 export const GravityContainerProvider = ({
   container,
   children,
-}: PropsWithChildren<{ container: MutableRefObject<HTMLDivElement> }>) => {
+}: PropsWithChildren<{ container: RefObject<HTMLDivElement> }>) => {
   const engine = useRef(Engine.create({ gravity: { y: 0.5 } }));
 
   useEffect(() => {
@@ -27,7 +28,7 @@ export const GravityContainerProvider = ({
     const ch = window.innerHeight;
 
     const render = Render.create({
-      element: container.current,
+      element: container.current ?? undefined,
       engine: engine.current,
       options: {
         width: cw,
@@ -73,7 +74,7 @@ export const GravityContainerProvider = ({
 
   return (
     <GravityContainerContext.Provider
-      value={{ engine: engine.current, container: container.current }}
+      value={{ engine: engine.current, container: container }}
     >
       {children}
     </GravityContainerContext.Provider>

@@ -26,8 +26,8 @@ export const GravityDiv = ({
   children,
   isStatic,
 }: GravityDivProps) => {
-  const divRef = useRef<HTMLDivElement>();
-  const startingPointRef = useRef<HTMLDivElement>();
+  const divRef = useRef<HTMLDivElement>(null);
+  const startingPointRef = useRef<HTMLDivElement>(null);
 
   const { engine } = useGravityContext();
 

@@ -7,7 +7,7 @@ import React from "react";
 import { GravityContainerProvider } from "./gravity-container-provider";
 
 export function GravityContainer({ children }: PropsWithChildren<{}>) {
-  const container = useRef<HTMLDivElement>({} as HTMLDivElement);
+  const container = useRef<HTMLDivElement>(null);
 
   return (
     <GravityContainerProvider container={container}>

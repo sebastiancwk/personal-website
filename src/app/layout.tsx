@@ -1,9 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import localFont from "next/font/local";
-
-const inter = Inter({ subsets: ["latin"] });
+import { Analytics } from '@vercel/analytics/react';
 
 const clashDisplay = localFont({
   src: [
@@ -36,6 +34,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${clashDisplay.variable} ${archivo.variable} ${archivo.className}`}>
         {children}
+        <Analytics />
       </body>
     </html>
   );

@@ -11,7 +11,7 @@ import { GravityDiv } from "./components/gravity-div/gravity-div";
 import { GravityContainer } from "./components/gravity-container/gravity-container";
 
 function Page() {
-  const defaultDelay = 3000;
+  const defaultDelay = 2000;
 
   return (
     <GravityContainer>

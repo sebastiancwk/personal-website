@@ -1,11 +1,4 @@
 "use client";
-import {
-  MutableRefObject,
-  PropsWithChildren,
-  useEffect,
-  useMemo,
-  useRef,
-} from "react";
 import React from "react";
 import { GravityDiv } from "./components/gravity-div/gravity-div";
 import { GravityContainer } from "./components/gravity-container/gravity-container";
@@ -28,18 +21,10 @@ function Page() {
           <div className="flex gap-1">
             <GravityDiv delay={defaultDelay}>
               <p className="p-1 bg-white">
-                I&apos;m a Software Engineer based in Tasmania, Australia
+                I&apos;m a Software Engineer based in Melbourne, Australia
               </p>
             </GravityDiv>
           </div>
-          <GravityDiv delay={defaultDelay}>
-            <p className="p-1 bg-white">
-              Currently at{" "}
-              <a href="https://www.goodhuman.me/" target="_blank">
-                GoodHuman
-              </a>
-            </p>
-          </GravityDiv>
           <div className="flex gap-1">
             <GravityDiv delay={defaultDelay}>
               <p className="text-sm p-1 bg-white">

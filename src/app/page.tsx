@@ -3,7 +3,7 @@ import React from "react";
 import { GravityDiv } from "./components/gravity-div/gravity-div";
 import { GravityContainer } from "./components/gravity-container/gravity-container";
 
-function Page() {
+const Page = () => {
   const defaultDelay = 2000;
 
   return (
@@ -25,6 +25,15 @@ function Page() {
               </p>
             </GravityDiv>
           </div>
+          <GravityDiv delay={defaultDelay}>
+            <p className="p-1 bg-white">
+              Currently kicking goals at{" "}
+              <a href="https://www.playhq.com/" target="_blank">
+                PlayHQ
+              </a>
+              🏐 ⚽️ 🏏
+            </p>
+          </GravityDiv>
           <div className="flex gap-1">
             <GravityDiv delay={defaultDelay}>
               <p className="text-sm p-1 bg-white">
@@ -57,7 +66,7 @@ function Page() {
           <GravityDiv isStatic>
             {" "}
             <p className="text-[0.75rem] p-1 text-white opacity-60">
-              &copy; Sebastian King 2023
+              &copy; Sebastian King 2025
             </p>
           </GravityDiv>
         </div>

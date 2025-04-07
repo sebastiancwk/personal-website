@@ -12,6 +12,7 @@ type GravityContainerContextProps = {
   engine: Engine;
   container: RefObject<HTMLDivElement>;
 };
+
 const GravityContainerContext =
   React.createContext<GravityContainerContextProps>(
     {} as GravityContainerContextProps
@@ -39,6 +40,8 @@ export const GravityContainerProvider = ({
       },
     });
 
+    // draw boundaries around window
+    // prevents anything from disappearing
     World.add(engine.current.world, [
       Bodies.rectangle(cw / 2, -10, cw, 20, {
         isStatic: true,
